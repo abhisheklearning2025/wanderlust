@@ -266,26 +266,15 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
   }
 
   Widget _buildOptionsGrid() {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final crossAxisCount = constraints.maxWidth > 500 ? 2 : 1;
-        return GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            mainAxisSpacing: 16,
-            crossAxisSpacing: 16,
-            childAspectRatio: crossAxisCount == 2 ? 1.2 : 2.8,
-          ),
-          itemCount: _options.length,
-          itemBuilder: (context, index) {
-            final option = _options[index];
-            final isSelected = _selected == option.id;
-            return _buildOptionCard(option, isSelected, index);
-          },
+    return Column(
+      children: _options.asMap().entries.map((e) {
+        final option = e.value;
+        final isSelected = _selected == option.id;
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: _buildOptionCard(option, isSelected, e.key),
         );
-      },
+      }).toList(),
     );
   }
 
@@ -360,16 +349,14 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Flexible(
-                  child: Text(
-                    option.description,
-                    style: GoogleFonts.inter(
-                      fontSize: 13,
-                      height: 1.4,
-                      color: isSelected
-                          ? AppColors.onPrimaryContainer
-                          : AppColors.onSurfaceVariant,
-                    ),
+                Text(
+                  option.description,
+                  style: GoogleFonts.inter(
+                    fontSize: 13,
+                    height: 1.4,
+                    color: isSelected
+                        ? AppColors.onPrimaryContainer
+                        : AppColors.onSurfaceVariant,
                   ),
                 ),
               ],

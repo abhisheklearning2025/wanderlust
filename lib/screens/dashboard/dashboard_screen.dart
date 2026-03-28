@@ -361,8 +361,8 @@ class DashboardScreen extends StatelessWidget {
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
         mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
-        childAspectRatio: 0.85,
+        crossAxisSpacing: 12,
+        childAspectRatio: 0.7,
       ),
       itemCount: actions.length,
       itemBuilder: (_, i) => _QuickActionCard(
@@ -549,14 +549,17 @@ class _QuickActionCard extends StatelessWidget {
               ),
               child: Icon(data.icon, size: 24, color: AppColors.primary),
             ),
-            const SizedBox(height: 12),
-            Text(
-              data.label.toUpperCase(),
-              style: GoogleFonts.inter(
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 2,
-                color: AppColors.tertiary,
+            const SizedBox(height: 10),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                data.label.toUpperCase(),
+                style: GoogleFonts.inter(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.5,
+                  color: AppColors.tertiary,
+                ),
               ),
             ),
           ],

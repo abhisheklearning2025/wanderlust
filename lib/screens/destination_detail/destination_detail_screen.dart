@@ -215,7 +215,7 @@ class DestinationDetailScreen extends StatelessWidget {
                       crossAxisCount: 4,
                       mainAxisSpacing: 12,
                       crossAxisSpacing: 12,
-                      childAspectRatio: 0.85,
+                      childAspectRatio: 0.7,
                     ),
                     itemCount: highlights.length,
                     itemBuilder: (context, i) {
