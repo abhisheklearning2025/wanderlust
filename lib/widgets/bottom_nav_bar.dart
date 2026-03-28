@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../core/theme/app_colors.dart';
+import '../screens/main_shell.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -45,10 +46,35 @@ class BottomNavBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: List.generate(items.length, (i) {
                   final active = i == currentIndex;
-                  return _NavItem(
-                    icon: items[i].icon,
-                    label: items[i].label,
-                    active: active,
+                  return GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: active
+                        ? null
+                        : () {
+                            Navigator.of(context).pushReplacement(
+                              PageRouteBuilder(
+                                pageBuilder: (_, __, ___) =>
+                                    MainShell(initialIndex: i),
+                                transitionDuration:
+                                    const Duration(milliseconds: 250),
+                                transitionsBuilder:
+                                    (_, animation, __, child) {
+                                  return FadeTransition(
+                                    opacity: animation,
+                                    child: child,
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                    child: SizedBox(
+                      width: 64,
+                      child: _NavItem(
+                        icon: items[i].icon,
+                        label: items[i].label,
+                        active: active,
+                      ),
+                    ),
                   );
                 }),
               ),

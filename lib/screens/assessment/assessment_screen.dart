@@ -9,7 +9,7 @@ import '../../widgets/glass_card.dart';
 import '../../widgets/glass_header.dart';
 import '../../widgets/bottom_nav_bar.dart';
 import '../../widgets/ambient_background.dart';
-import '../dashboard/dashboard_screen.dart';
+import '../main_shell.dart';
 
 class _TravelerOption {
   final String id;
@@ -428,7 +428,7 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                   borderRadius: BorderRadius.circular(12),
                   onTap: () {
                     Navigator.of(context).pushReplacement(
-                      FadeRoute(page: const DashboardScreen()),
+                      FadeRoute(page: const MainShell()),
                     );
                   },
                   child: Padding(

@@ -6,6 +6,8 @@ import '../../core/theme/app_colors.dart';
 import '../../widgets/glass_card.dart';
 import '../../widgets/glass_header.dart';
 import '../../widgets/bottom_nav_bar.dart';
+import '../destination_detail/destination_detail_screen.dart';
+import '../main_shell.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -79,11 +81,11 @@ class DashboardScreen extends StatelessWidget {
                       const SizedBox(height: 32),
 
                       // Quick actions
-                      _buildQuickActions(),
+                      _buildQuickActions(context),
                       const SizedBox(height: 40),
 
                       // For You section
-                      _buildForYouSection(),
+                      _buildForYouSection(context),
                       const SizedBox(height: 40),
 
                       // Trending section
@@ -306,7 +308,16 @@ class DashboardScreen extends StatelessWidget {
 
                   // CTA button
                   ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
+                        PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => const MainShell(initialIndex: 2),
+                          transitionDuration: const Duration(milliseconds: 250),
+                          transitionsBuilder: (_, animation, __, child) =>
+                              FadeTransition(opacity: animation, child: child),
+                        ),
+                      );
+                    },
                     icon: const Text('Start Planning'),
                     label: const Icon(Icons.arrow_forward_rounded, size: 20),
                     style: ElevatedButton.styleFrom(
@@ -336,12 +347,12 @@ class DashboardScreen extends StatelessWidget {
         );
   }
 
-  Widget _buildQuickActions() {
+  Widget _buildQuickActions(BuildContext context) {
     final actions = [
-      _QuickActionData(Icons.explore_rounded, 'Explore'),
-      _QuickActionData(Icons.calendar_today_rounded, 'Plan'),
-      _QuickActionData(Icons.translate_rounded, 'Translate'),
-      _QuickActionData(Icons.error_outline_rounded, 'SOS'),
+      _QuickActionData(Icons.explore_rounded, 'Explore', 1),
+      _QuickActionData(Icons.calendar_today_rounded, 'Plan', 2),
+      _QuickActionData(Icons.translate_rounded, 'Translate', null),
+      _QuickActionData(Icons.error_outline_rounded, 'SOS', null),
     ];
 
     return GridView.builder(
@@ -354,11 +365,26 @@ class DashboardScreen extends StatelessWidget {
         childAspectRatio: 0.85,
       ),
       itemCount: actions.length,
-      itemBuilder: (context, i) => _QuickActionCard(data: actions[i]),
+      itemBuilder: (_, i) => _QuickActionCard(
+        data: actions[i],
+        onTap: actions[i].navIndex != null
+            ? () {
+                Navigator.of(context).pushReplacement(
+                  PageRouteBuilder(
+                    pageBuilder: (_, __, ___) =>
+                        MainShell(initialIndex: actions[i].navIndex!),
+                    transitionDuration: const Duration(milliseconds: 250),
+                    transitionsBuilder: (_, animation, __, child) =>
+                        FadeTransition(opacity: animation, child: child),
+                  ),
+                );
+              }
+            : null,
+      ),
     );
   }
 
-  Widget _buildForYouSection() {
+  Widget _buildForYouSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -375,7 +401,16 @@ class DashboardScreen extends StatelessWidget {
               ),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                  PageRouteBuilder(
+                    pageBuilder: (_, __, ___) => const MainShell(initialIndex: 1),
+                    transitionDuration: const Duration(milliseconds: 250),
+                    transitionsBuilder: (_, animation, __, child) =>
+                        FadeTransition(opacity: animation, child: child),
+                  ),
+                );
+              },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -401,28 +436,44 @@ class DashboardScreen extends StatelessWidget {
           child: ListView(
             scrollDirection: Axis.horizontal,
             clipBehavior: Clip.none,
-            children: const [
+            children: [
               _DestinationCard(
                 imageUrl: 'https://picsum.photos/seed/copenhagen/400/500',
                 tag: 'Nordic Escape',
                 title: 'Copenhagen, Denmark',
+                onTap: () => _openDetail(context, 'Copenhagen, Denmark', 'https://picsum.photos/seed/copenhagen/400/500', ['Nordic', 'Culture']),
               ),
-              SizedBox(width: 24),
+              const SizedBox(width: 24),
               _DestinationCard(
                 imageUrl: 'https://picsum.photos/seed/kyoto/400/500',
                 tag: 'Cultural Immersion',
                 title: 'Kyoto, Japan',
+                onTap: () => _openDetail(context, 'Kyoto, Japan', 'https://picsum.photos/seed/kyoto/400/500', ['Culture', 'Zen']),
               ),
-              SizedBox(width: 24),
+              const SizedBox(width: 24),
               _DestinationCard(
                 imageUrl: 'https://picsum.photos/seed/amalfi/400/500',
                 tag: 'Coastal Serenity',
                 title: 'Amalfi, Italy',
+                onTap: () => _openDetail(context, 'Amalfi, Italy', 'https://picsum.photos/seed/amalfi/400/500', ['Coastal', 'Romance']),
               ),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  void _openDetail(BuildContext context, String title, String imageUrl, List<String> tags) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => DestinationDetailScreen(
+          title: title,
+          imageUrl: imageUrl,
+          matchPercent: '90%',
+          tags: tags,
+        ),
+      ),
     );
   }
 
@@ -470,41 +521,46 @@ class DashboardScreen extends StatelessWidget {
 class _QuickActionData {
   final IconData icon;
   final String label;
-  const _QuickActionData(this.icon, this.label);
+  final int? navIndex;
+  const _QuickActionData(this.icon, this.label, this.navIndex);
 }
 
 class _QuickActionCard extends StatelessWidget {
   final _QuickActionData data;
-  const _QuickActionCard({required this.data});
+  final VoidCallback? onTap;
+  const _QuickActionCard({required this.data, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return GlassCard(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-      borderRadius: BorderRadius.circular(24),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.primary.withValues(alpha: 0.1),
+    return GestureDetector(
+      onTap: onTap,
+      child: GlassCard(
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+        borderRadius: BorderRadius.circular(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.primary.withValues(alpha: 0.1),
+              ),
+              child: Icon(data.icon, size: 24, color: AppColors.primary),
             ),
-            child: Icon(data.icon, size: 24, color: AppColors.primary),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            data.label.toUpperCase(),
-            style: GoogleFonts.inter(
-              fontSize: 10,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 2,
-              color: AppColors.tertiary,
+            const SizedBox(height: 12),
+            Text(
+              data.label.toUpperCase(),
+              style: GoogleFonts.inter(
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 2,
+                color: AppColors.tertiary,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -514,20 +570,24 @@ class _DestinationCard extends StatelessWidget {
   final String imageUrl;
   final String tag;
   final String title;
+  final VoidCallback? onTap;
 
   const _DestinationCard({
     required this.imageUrl,
     required this.tag,
     required this.title,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 280,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: Stack(
+    return GestureDetector(
+      onTap: onTap,
+      child: SizedBox(
+        width: 280,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: Stack(
           fit: StackFit.expand,
           children: [
             CachedNetworkImage(
@@ -584,6 +644,7 @@ class _DestinationCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }
