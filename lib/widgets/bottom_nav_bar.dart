@@ -53,12 +53,12 @@ class BottomNavBar extends StatelessWidget {
                         : () {
                             Navigator.of(context).pushReplacement(
                               PageRouteBuilder(
-                                pageBuilder: (_, __, ___) =>
+                                pageBuilder: (_, _, _) =>
                                     MainShell(initialIndex: i),
                                 transitionDuration:
                                     const Duration(milliseconds: 250),
                                 transitionsBuilder:
-                                    (_, animation, __, child) {
+                                    (_, animation, _, child) {
                                   return FadeTransition(
                                     opacity: animation,
                                     child: child,

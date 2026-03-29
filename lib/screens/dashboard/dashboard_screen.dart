@@ -311,9 +311,9 @@ class DashboardScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pushReplacement(
                         PageRouteBuilder(
-                          pageBuilder: (_, __, ___) => const MainShell(initialIndex: 2),
+                          pageBuilder: (_, _, _) => const MainShell(initialIndex: 2),
                           transitionDuration: const Duration(milliseconds: 250),
-                          transitionsBuilder: (_, animation, __, child) =>
+                          transitionsBuilder: (_, animation, _, child) =>
                               FadeTransition(opacity: animation, child: child),
                         ),
                       );
@@ -371,10 +371,10 @@ class DashboardScreen extends StatelessWidget {
             ? () {
                 Navigator.of(context).pushReplacement(
                   PageRouteBuilder(
-                    pageBuilder: (_, __, ___) =>
+                    pageBuilder: (_, _, _) =>
                         MainShell(initialIndex: actions[i].navIndex!),
                     transitionDuration: const Duration(milliseconds: 250),
-                    transitionsBuilder: (_, animation, __, child) =>
+                    transitionsBuilder: (_, animation, _, child) =>
                         FadeTransition(opacity: animation, child: child),
                   ),
                 );
@@ -404,9 +404,9 @@ class DashboardScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pushReplacement(
                   PageRouteBuilder(
-                    pageBuilder: (_, __, ___) => const MainShell(initialIndex: 1),
+                    pageBuilder: (_, _, _) => const MainShell(initialIndex: 1),
                     transitionDuration: const Duration(milliseconds: 250),
-                    transitionsBuilder: (_, animation, __, child) =>
+                    transitionsBuilder: (_, animation, _, child) =>
                         FadeTransition(opacity: animation, child: child),
                   ),
                 );

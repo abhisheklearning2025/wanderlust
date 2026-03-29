@@ -211,7 +211,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: _categories.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 10),
+        separatorBuilder: (_, _) => const SizedBox(width: 10),
         itemBuilder: (context, i) {
           final cat = _categories[i];
           final selected = i == _selectedCategory;
@@ -252,7 +252,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: _destinations.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 20),
+      separatorBuilder: (_, _) => const SizedBox(height: 20),
       itemBuilder: (context, i) {
         final dest = _destinations[i];
         return GestureDetector(
